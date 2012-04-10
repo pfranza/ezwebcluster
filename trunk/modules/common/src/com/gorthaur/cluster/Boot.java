@@ -1,5 +1,7 @@
 package com.gorthaur.cluster;
 
+import java.io.File;
+
 import javax.inject.Inject;
 
 import org.apache.commons.cli.CommandLine;
@@ -11,6 +13,9 @@ import org.apache.commons.cli.Options;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.gorthaur.cluster.console.server.ApplicationContextListener;
+import com.gorthaur.cluster.web.WebContainer;
 
 public class Boot {
 
@@ -19,10 +24,17 @@ public class Boot {
 	
 	@Inject CommandLine commandLine;
 	
-	void start() {
+	@Inject
+	Injector injector;
+	
+	void start() throws Exception {
+		
+		ApplicationContextListener.setInjector(injector);
+		
 		if(commandLine.hasOption("console")) {
-			String consolePort = commandLine.getOptionValue("console");
+			int consolePort = Integer.valueOf(commandLine.getOptionValue("console"));
 			System.out.println("Console On Port " + consolePort);
+			new WebContainer(consolePort, new File("war"));
 		} else {
 			System.out.println("Launch Slave");
 		}
