@@ -20,5 +20,6 @@
 	<classpathentry kind="lib" path="libs/netty-3.4.0.Beta1.jar"/>
 	<classpathentry kind="lib" path="libs/protobuf-java-2.4.1.jar"/>
 	<classpathentry kind="lib" path="libs/protobuf-gen.jar"/>
+	<classpathentry kind="lib" path="libs/guava-11.0.2.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
