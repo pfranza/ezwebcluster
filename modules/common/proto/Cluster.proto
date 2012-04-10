@@ -5,6 +5,13 @@ option java_package = "com.gorthaur.cluster.protocol";
 option java_outer_classname = "Cluster";
 
 message ClusterNode {
+
 	required string name = 1;
+
+  	message ActiveTasks {
+  	
+  	}
+
+	repeated ActiveTasks tasks = 2;
 
 }
