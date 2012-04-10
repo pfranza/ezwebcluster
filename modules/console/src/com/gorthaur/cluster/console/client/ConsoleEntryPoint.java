@@ -4,11 +4,12 @@ import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.gorthaur.cluster.console.client.activities.ManageNodesPlace;
 
 public class ConsoleEntryPoint implements EntryPoint {
 
@@ -20,22 +21,27 @@ public class ConsoleEntryPoint implements EntryPoint {
 		EventBus eventBus = injector.getEventBus();
         PlaceController placeController = injector.getPlaceController();
 
-        MasterLayout container = injector.getMasterLayout();
-        
         // Start ActivityManager for the main widget with our ActivityMapper
         AppActivityMapper activityMapper = injector.getAppActivityMapper();
         ActivityManager activityManager = new ActivityManager(activityMapper, eventBus);
-        activityManager.setDisplay(container);
+        activityManager.setDisplay(new AcceptsOneWidget() {
+			
+			@Override
+			public void setWidget(IsWidget w) {
+				System.out.println("Set Wid");
+				RootLayoutPanel.get().clear();
+				RootLayoutPanel.get().add(w);
+			}
+		});
 
         // Start PlaceHistoryHandler with our PlaceHistoryMapper
         AppPlaceHistoryMapper historyMapper= injector.getAppPlaceHistoryMapper();
         PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
-        historyHandler.register(placeController, eventBus, Place.NOWHERE);
+        historyHandler.register(placeController, eventBus, new ManageNodesPlace(""));
        
-        RootLayoutPanel.get().add(container);
+       // .add(container);
         historyHandler.handleCurrentHistory();
         
-        RootLayoutPanel.get().add(new Label("hello world"));
 	}
 
 }
