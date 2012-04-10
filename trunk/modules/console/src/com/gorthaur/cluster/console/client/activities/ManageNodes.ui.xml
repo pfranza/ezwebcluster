@@ -4,5 +4,11 @@
 	<ui:style>
 		
 	</ui:style>
-	<g:SimplePanel ui:field="container"/>
+	<g:HTMLPanel>
+	<g:HorizontalPanel>
+	  <g:ScrollPanel>
+	  	<g:VerticalPanel ui:field="machineList"/>
+	  </g:ScrollPanel>
+	  </g:HorizontalPanel>
+	</g:HTMLPanel>
 </ui:UiBinder> 

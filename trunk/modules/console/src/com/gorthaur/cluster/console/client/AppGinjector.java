@@ -14,7 +14,5 @@ public interface AppGinjector extends Ginjector {
 	
 	AppActivityMapper getAppActivityMapper();
 	AppPlaceHistoryMapper getAppPlaceHistoryMapper();
-	
-	MasterLayout getMasterLayout();
-	
+
 }
