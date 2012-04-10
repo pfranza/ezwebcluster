@@ -1,0 +1,21 @@
+<project default="compile">
+
+	<target name="protobuf">
+		<delete dir="outdir" failonerror="false"/>
+		<mkdir dir="outdir"/>
+		
+		<exec executable="libs/protobuf/protoc"> 
+		  <arg value="--java_out=outdir" /> 
+		  <arg value="-I=modules/common/proto" /> 
+		  <arg value="modules/common/proto/Cluster.proto" /> 
+		</exec> 
+		
+		<javac srcdir="outdir" destdir="outdir" classpath="libs/protobuf-java-2.4.1.jar"/>
+		<jar destfile="libs/protobuf-gen.jar" basedir="outdir" />
+		<delete dir="outdir" failonerror="true"/>
+		
+	</target>
+	
+	<target name="compile"></target>
+	
+</project>
