@@ -13,5 +13,12 @@ message ClusterNode {
   	}
 
 	repeated ActiveTasks tasks = 2;
+	
+	optional uint64 memoryFreeBytes = 3;
+	optional uint64 memoryTotalBytes = 4;
+	
+	optional float cpuUtilization = 5;
+	optional uint64 cpuFrequency = 6;
+	
 
 }

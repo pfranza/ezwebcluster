@@ -13,12 +13,17 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.gorthaur.cluster.channels.AdministrationChannel;
 import com.gorthaur.cluster.protocol.Cluster.ClusterNode;
+import com.jezhumble.javasysmon.CpuTimes;
+import com.jezhumble.javasysmon.JavaSysMon;
 
 @Singleton
 public class ClusterStateManager {
 
 	@Inject
 	AdministrationChannel channel;
+	
+	private JavaSysMon monitor = new JavaSysMon();
+	private CpuTimes prevTimes;
 	
 	private Cache<String, ClusterNode> cache = CacheBuilder.newBuilder()
 		    .expireAfterWrite(10, TimeUnit.SECONDS)
@@ -31,8 +36,13 @@ public class ClusterStateManager {
 		public void run() {
 			try {
 				ClusterNode node = ClusterNode.newBuilder()
-						.setName(channel.getName()).build();
-				
+						.setName(channel.getName())
+						.setCpuFrequency(monitor.cpuFrequencyInHz())
+						.setCpuUtilization(prevTimes != null ? monitor.cpuTimes().getCpuUsage(prevTimes) : 0 )
+						.setMemoryFreeBytes(monitor.physical().getFreeBytes())
+						.setMemoryTotalBytes(monitor.physical().getTotalBytes())
+						.build();
+	
 				channel.publishMessage(node);
 				cache.cleanUp();
 			} catch (Exception e) {
