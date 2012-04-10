@@ -5,9 +5,11 @@ import javax.inject.Inject;
 import net.customware.gwt.dispatch.client.DispatchAsync;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Hyperlink;
@@ -33,6 +35,7 @@ public class ManageNodes extends AbstractCompositeActivity {
 	AppPlaceHistoryMapper historyMapper;
 	
 	@UiField VerticalPanel machineList; 
+	@UiField SpanElement machineName;
 	
 	private AsyncCallback<NodeCollection> handler  = new AsyncCallback<NodeCollection>() {
 		
@@ -61,6 +64,7 @@ public class ManageNodes extends AbstractCompositeActivity {
 	public void start(AcceptsOneWidget panel, EventBus eventBus) {
 		super.start(panel, eventBus);
 		dispatcher.execute(new ListNodes(), handler);
+		machineName.setInnerText(((ManageNodesPlace)historyMapper.getPlace(History.getToken())).getToken());
 	}
 
 }
