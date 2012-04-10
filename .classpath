@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="modules/common/src"/>
+	<classpathentry kind="src" path="modules/console/src"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/guice/aopalliance.jar"/>
@@ -22,5 +23,8 @@
 	<classpathentry kind="lib" path="libs/protobuf-gen.jar"/>
 	<classpathentry kind="lib" path="libs/guava-11.0.2.jar"/>
 	<classpathentry kind="lib" path="libs/javasysmon-0.3.3.jar"/>
+	<classpathentry kind="lib" path="libs/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/gin-1.5-post-gwt-2.2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-dispatch-1.2.0.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
