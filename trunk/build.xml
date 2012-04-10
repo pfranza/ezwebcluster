@@ -1,5 +1,29 @@
 <project default="compile">
 
+	<property name="gwt.home" location="buildtools/gwt-2.4.0" />
+
+	<path id="library.gwt-user.classpath">
+		<pathelement location="${gwt.home}/gwt-user.jar" />
+	</path>
+
+	<path id="library.gwt-dev.classpath">
+		<fileset dir="${gwt.home}" includes="gwt-dev.jar" />
+	</path>
+	
+
+	<path id="client.compile.classpath">
+		<fileset dir="${gwt.home}" includes="**/*.jar" />
+		<fileset dir="war/WEB-INF/lib" includes="**/*.jar" />
+		<fileset dir="libs" includes="**/*.jar" />
+		<pathelement location="modules/console/src" />
+		<pathelement location="war/WEB-INF/classes" />
+	</path>
+	
+	<path id="gwt.cp">
+		<pathelement location="war/WEB-INF/classes" />
+		<path refid="client.compile.classpath" />
+	</path>
+	
 	<target name="protobuf">
 		<delete dir="outdir" failonerror="false"/>
 		<mkdir dir="outdir"/>
@@ -16,6 +40,24 @@
 		
 	</target>
 	
-	<target name="compile"></target>
+	<target name="compile" depends="protobuf">
+			<javac srcdir="modules/console/src" destdir="war/WEB-INF/classes" 
+					debug="true" classpathref="client.compile.classpath"/>
+			
+			<delete dir="war/console" failonerror="false" />
+			<java fork="true" classpathref="gwt.cp" classname="com.google.gwt.dev.Compiler">
+				<jvmarg line="-Xmx768m" />
+				<arg line="-war war" />
+				<arg line="com.gorthaur.cluster.console.Console" />
+			</java>
+			
+			<copy todir="war/WEB-INF/classes">
+				<fileset dir="modules/console/src">
+					<exclude name="**/*.java" />
+				</fileset>
+			</copy>
+			
+			<jar destfile="console.war" basedir="war"/>
+	</target>
 	
 </project>
