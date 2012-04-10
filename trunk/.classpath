@@ -3,5 +3,22 @@
 	<classpathentry kind="src" path="modules/common/src"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="libs/guice/aopalliance.jar"/>
+	<classpathentry kind="lib" path="libs/guice/guice-3.0.jar"/>
+	<classpathentry kind="lib" path="libs/guice/guice-assistedinject-3.0.jar"/>
+	<classpathentry kind="lib" path="libs/guice/guice-grapher-3.0.jar"/>
+	<classpathentry kind="lib" path="libs/guice/guice-jmx-3.0.jar"/>
+	<classpathentry kind="lib" path="libs/guice/guice-jndi-3.0.jar"/>
+	<classpathentry kind="lib" path="libs/guice/guice-multibindings-3.0.jar"/>
+	<classpathentry kind="lib" path="libs/guice/guice-persist-3.0.jar"/>
+	<classpathentry kind="lib" path="libs/guice/guice-servlet-3.0.jar"/>
+	<classpathentry kind="lib" path="libs/guice/guice-spring-3.0.jar"/>
+	<classpathentry kind="lib" path="libs/guice/guice-struts2-plugin-3.0.jar"/>
+	<classpathentry kind="lib" path="libs/guice/guice-throwingproviders-3.0.jar"/>
+	<classpathentry kind="lib" path="libs/guice/javax.inject.jar"/>
+	<classpathentry kind="lib" path="libs/jgroups-3.0.9.Final.jar"/>
+	<classpathentry kind="lib" path="libs/netty-3.4.0.Beta1.jar"/>
+	<classpathentry kind="lib" path="libs/protobuf-java-2.4.1.jar"/>
+	<classpathentry kind="lib" path="libs/protobuf-gen.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
