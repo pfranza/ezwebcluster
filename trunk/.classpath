@@ -26,5 +26,6 @@
 	<classpathentry kind="lib" path="libs/commons-cli-1.2.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gin-1.5-post-gwt-2.2.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-dispatch-1.2.0.jar"/>
+	<classpathentry kind="lib" path="buildTools/one-jar-ant-task-0.97.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
