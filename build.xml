@@ -60,4 +60,26 @@
 			<jar destfile="modules/console/console.war" basedir="modules/console/war"/>
 	</target>
 	
+	<target name="package">
+		
+		<path id="lib.path">
+		      <fileset dir="buildTools" includes="**/*.jar"/>
+		</path>
+		
+		<taskdef name="one-jar" classname="com.simontuffs.onejar.ant.OneJarTask" classpathref="lib.path"/>
+		
+		 <manifest file="manager.mf">
+		 </manifest>
+		 <one-jar destfile="manager.jar" manifest="manager.mf">
+		 	<main>
+		 		 <fileset dir="bin"/>
+		 	</main>
+            <lib>
+                <fileset file="libs/*.jar" />
+            </lib>
+		 </one-jar>
+		
+		 <delete file="manager.mf"/>
+	</target>
+	
 </project>
