@@ -7,29 +7,40 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mortbay.jetty.Connector;
-import org.mortbay.jetty.HttpConnection;
-import org.mortbay.jetty.Request;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.AbstractHandler;
-import org.mortbay.jetty.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.nio.AbstractNIOConnector;
+import org.eclipse.jetty.server.nio.BlockingChannelConnector;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
+
+
 
 public class TestWebServer {
 
 	public static void main(String[] args) throws Exception {
 		Server server = new Server();
 		
-		int servers = 10;
+		int servers = 1;
 		int baseAddress = 49000;
 		
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 		for (int i = 0; i < servers; i++) {
-			Connector connector=new SelectChannelConnector();
+			AbstractNIOConnector connector = new BlockingChannelConnector(); //new SocketConnector();
 			connector.setPort(baseAddress + i);
+			connector.setMaxIdleTime(30000);
+			connector.setAcceptQueueSize(500);
 			connectors.add(connector);
 		}
 		
 		System.out.println("Binding: " + connectors.size());
+		
+		QueuedThreadPool threadPool = new QueuedThreadPool();
+			threadPool.setMinThreads(10);
+			threadPool.setMaxThreads(200);
+			
+		server.setThreadPool(threadPool);
 		
 		server.setConnectors(connectors.toArray(new Connector[connectors.size()]));
 		
@@ -42,15 +53,12 @@ public class TestWebServer {
 	{
 
 		@Override
-		public void handle(String arg0, HttpServletRequest request, HttpServletResponse response, int arg3) throws IOException,
-				ServletException {
-			
-				Request base_request = (request instanceof Request) ? (Request)request:HttpConnection.getCurrentConnection().getRequest();
-	            base_request.setHandled(true);
-	            
-			 	response.setContentType("text/html;charset=utf-8");
-		        response.setStatus(HttpServletResponse.SC_OK);
-		        response.getWriter().println("OK");
+		public void handle(String arg0, Request arg1, HttpServletRequest arg2,
+				HttpServletResponse response) throws IOException, ServletException {
+			arg1.setHandled(true);
+			response.setContentType("text/html;charset=utf-8");
+	        response.setStatus(HttpServletResponse.SC_OK);
+	        response.getWriter().println("OK");
 		}
 
 		

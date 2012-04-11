@@ -1,10 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="modules/common/src"/>
-	<classpathentry kind="src" path="modules/console/src"/>
 	<classpathentry kind="src" path="modules/loadbalancer/src"/>
 	<classpathentry kind="src" path="modules/webserver/src"/>
-	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
+	<classpathentry kind="src" path="modules/console/src"/>
+	<classpathentry kind="lib" path="C:/Users/pfranza/.eclipse/org.eclipse.platform_3.7.0_2049681907/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201201120043-rel-r37/gwt-2.4.0/gwt-user.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/Users/pfranza/.eclipse/org.eclipse.platform_3.7.0_2049681907/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201201120043-rel-r37/gwt-2.4.0/doc/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/pfranza/.eclipse/org.eclipse.platform_3.7.0_2049681907/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201201120043-rel-r37/gwt-2.4.0/gwt-dev.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/Users/pfranza/.eclipse/org.eclipse.platform_3.7.0_2049681907/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201201120043-rel-r37/gwt-2.4.0/doc/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/pfranza/.eclipse/org.eclipse.platform_3.7.0_2049681907/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201201120043-rel-r37/gwt-2.4.0/validation-api-1.0.0.GA-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/pfranza/.eclipse/org.eclipse.platform_3.7.0_2049681907/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201201120043-rel-r37/gwt-2.4.0/validation-api-1.0.0.GA.jar" sourcepath="C:/Users/pfranza/.eclipse/org.eclipse.platform_3.7.0_2049681907/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201201120043-rel-r37/gwt-2.4.0/validation-api-1.0.0.GA-sources.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-ajp-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-annotations-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-client-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-continuation-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-deploy-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-http-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-io-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-jmx-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-jndi-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-overlay-deployer-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-plus-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-policy-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-rewrite-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-security-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-server-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-servlet-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-servlets-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-util-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-webapp-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-websocket-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/jetty-xml-8.1.2.v20120308.jar"/>
+	<classpathentry kind="lib" path="libs/jetty/servlet-api-3.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/guice/aopalliance.jar"/>
 	<classpathentry kind="lib" path="libs/guice/guice-3.0.jar"/>
