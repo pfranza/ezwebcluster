@@ -280,8 +280,6 @@ public class SecureChatKeyStore {
 		return "secret".toCharArray();
 	}
 
-	private SecureChatKeyStore() {
-		// Unused
-	}
+	private SecureChatKeyStore() {}
 
 }

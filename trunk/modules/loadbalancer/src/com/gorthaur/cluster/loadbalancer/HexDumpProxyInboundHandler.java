@@ -25,9 +25,7 @@ public class HexDumpProxyInboundHandler extends SimpleChannelUpstreamHandler {
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
             throws Exception {
-    	
-    	ChannelBuffer msg = (ChannelBuffer) e.getMessage();
-    	
+    	ChannelBuffer msg = (ChannelBuffer) e.getMessage();    	
     	Channel proxyChannel = sockets.get(e.getChannel().getId());
     	proxyChannel.write(msg);
     }
