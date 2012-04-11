@@ -1,5 +1,6 @@
 package com.gorthaur.cluster;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Timer;
@@ -11,6 +12,7 @@ import javax.inject.Singleton;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.gorthaur.cluster.applications.LocalApplicationManager;
 import com.gorthaur.cluster.channels.AdministrationChannel;
 import com.gorthaur.cluster.protocol.Cluster.ClusterNode;
 import com.jezhumble.javasysmon.CpuTimes;
@@ -21,6 +23,8 @@ public class ClusterStateManager {
 
 	@Inject
 	AdministrationChannel channel;
+	
+	@Inject LocalApplicationManager applicationManager;
 	
 	private JavaSysMon monitor = new JavaSysMon();
 	private CpuTimes prevTimes;
@@ -43,7 +47,10 @@ public class ClusterStateManager {
 						.setMemoryTotalBytes(monitor.physical().getTotalBytes())
 						.build();
 	
-				channel.publishMessage(node);
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				node.writeTo(out);
+				
+				channel.publishMessage(ClusterNode.class, out.toByteArray());
 				cache.cleanUp();
 			} catch (Exception e) {
 				throw new RuntimeException(e);

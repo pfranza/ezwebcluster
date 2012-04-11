@@ -11,10 +11,10 @@ import org.jboss.netty.handler.ssl.SslHandler;
 
 import com.gorthaur.cluster.loadbalancer.ssl.SecureChatSslContextFactory;
 
-public class HexDumpProxyPipelineFactory implements ChannelPipelineFactory {
+public class ProxyPipelineFactory implements ChannelPipelineFactory {
 
 	@Inject
-	HexDumpProxyInboundHandler handler;
+	ProxyInboundHandler handler;
 
 	@Override
 	public ChannelPipeline getPipeline() throws Exception {
