@@ -1,7 +1,10 @@
 package com.gorthaur.cluster.channels;
 
-import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Collection;
+import java.util.Properties;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -11,9 +14,17 @@ import org.jgroups.JChannel;
 import org.jgroups.Message;
 import org.jgroups.ReceiverAdapter;
 import org.jgroups.View;
+import org.jgroups.blocks.RequestCorrelator.Header;
+import org.jgroups.conf.ClassConfigurator;
+import org.jgroups.util.Streamable;
 
 import com.gorthaur.cluster.ClusterStateManager;
+import com.gorthaur.cluster.applications.Application;
+import com.gorthaur.cluster.applications.LocalApplicationManager;
 import com.gorthaur.cluster.protocol.Cluster.ClusterNode;
+import com.gorthaur.cluster.protocol.Cluster.LaunchApplication;
+import com.gorthaur.cluster.protocol.Cluster.LaunchApplication.Property;
+import com.gorthaur.cluster.protocol.Cluster.ShutdownApplication;
 
 @Singleton
 public class AdministrationChannel {
@@ -22,10 +33,27 @@ public class AdministrationChannel {
 
 	private ReceiverAdapter recv = new ReceiverAdapter() {
 		
+		@SuppressWarnings("unchecked")
 		public void receive(org.jgroups.Message msg) {
 			try {
-				ClusterNode node = ClusterNode.parseFrom(msg.getBuffer());
-				stateManager.processNewState(node);
+				ProtoBufHeader header = (ProtoBufHeader) msg.getHeader((short) 1900);
+				if(header.className.equals(ClusterNode.class.getName())) {
+					ClusterNode node = ClusterNode.parseFrom(msg.getBuffer());
+					stateManager.processNewState(node);
+				} else if(header.className.equals(LaunchApplication.class.getName())) {
+					LaunchApplication application = LaunchApplication.parseFrom(msg.getBuffer());
+					Properties properties = new Properties();
+					for(Property p: application.getPropertiesList()) {
+						properties.setProperty(p.getKey(), p.getValue());
+					}
+					applicationManager.launchApplication((Class<? extends Application>)Class.forName(application.getClsName()), properties);
+				} else if(header.className.equals(ShutdownApplication.class.getName())) {
+					ShutdownApplication application = ShutdownApplication.parseFrom(msg.getBuffer());
+					applicationManager.shutdownApplication(application.getApplicationId());
+				} else {
+					System.out.println("Unknown class: " + header.className);
+				}
+				
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -38,13 +66,15 @@ public class AdministrationChannel {
 	};
 	
 	@Inject ClusterStateManager stateManager;
+	@Inject LocalApplicationManager applicationManager;
 	
 	@Inject
 	AdministrationChannel() throws Exception {
 		channel=new JChannel();
 		channel.setReceiver(recv);
 		channel.connect("AdministrationChannel");
-		System.out.println("Local Name: " + channel.getName() );	
+		System.out.println("Local Name: " + channel.getName() );			
+		ClassConfigurator.add((short) 1900, ProtoBufHeader.class);
 	}
 	
 	public Collection<Address> getAddresses() {
@@ -55,22 +85,41 @@ public class AdministrationChannel {
 		return channel.getName();
 	}
 
-	public void publishMessage(ClusterNode node) throws Exception {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		node.writeTo(out);
-		channel.send(new Message(null, out.toByteArray()));
+	public void publishMessage(Class<?> cls, byte[] bytes) throws Exception {
+		publishMessage(null, cls, bytes);
 	}
 	
-//	private static class ClusterNode implements Serializable {
-//
-//		/**
-//		 * 
-//		 */
-//		private static final long serialVersionUID = 3849098560672418456L;
-//		
-//		private Address address;
-//		
-//	}
-//	
+	public void publishMessage(Address address, Class<?> cls, byte[] bytes) throws Exception {
+		Message msg = new Message(address, bytes);
+		msg.putHeader((short) 1900, new ProtoBufHeader(cls));
+		channel.send(msg);
+	}
+
+	public static class ProtoBufHeader extends Header implements Streamable {
+		
+		String className;
+
+		public ProtoBufHeader() {}
+
+        public ProtoBufHeader(Class<?> cls) {
+           className = cls.getName();
+        }
+
+        public String toString() {
+            return className;
+        }
+
+        public int size() {
+            return className.length();
+        }
+
+        public void writeTo(DataOutputStream out) throws IOException {
+            out.writeUTF(className);
+        }
+
+        public void readFrom(DataInputStream in) throws IOException, IllegalAccessException, InstantiationException {
+            className = in.readUTF();
+        }
+	}
 	
 }

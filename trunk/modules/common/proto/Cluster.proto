@@ -8,17 +8,29 @@ message ClusterNode {
 
 	required string name = 1;
 
-  	message ActiveTasks {
-  	
+  	message ActiveApplications {
+  		required string name = 1;
+  		required string applicationId = 2;
   	}
 
-	repeated ActiveTasks tasks = 2;
+	repeated ActiveApplications applications = 2;
 	
 	optional uint64 memoryFreeBytes = 3;
 	optional uint64 memoryTotalBytes = 4;
 	
 	optional float cpuUtilization = 5;
 	optional uint64 cpuFrequency = 6;
-	
+}
 
+message LaunchApplication {
+	required string clsName = 1;
+	message Property {
+  		required string key = 1;
+  		required string value = 2;
+  	}
+  	repeated Property properties = 2;
+}
+
+message ShutdownApplication {
+	required string applicationId = 1;
 }

@@ -17,15 +17,15 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import com.gorthaur.cluster.loadbalancer.remote.ProxyChannel;
 import com.gorthaur.cluster.loadbalancer.remote.SocketCollection;
 
-public class HexDumpProxyInboundHandler extends SimpleChannelUpstreamHandler {
+public class ProxyInboundHandler extends SimpleChannelUpstreamHandler {
 
 	private SocketCollection sockets;
-	private Executor executor;
+	//private Executor executor;
 	
     @Inject
-    public HexDumpProxyInboundHandler(SocketCollection sockets, Executor executor) {
+    public ProxyInboundHandler(SocketCollection sockets, Executor executor) {
         this.sockets = sockets;
-        this.executor = executor;
+//        this.executor = executor;
     }
 
     @Override
