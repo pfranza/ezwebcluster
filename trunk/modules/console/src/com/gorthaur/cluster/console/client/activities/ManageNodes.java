@@ -75,7 +75,7 @@ public class ManageNodes extends AbstractCompositeActivity {
 	
 	@UiHandler("launch")
 	void clickLaunch(ClickEvent evt) {
-		dispatcher.execute(new LaunchApplication(), new AsyncCallback<StringResult>() {
+		dispatcher.execute(new LaunchApplication("", machineName.getInnerText()), new AsyncCallback<StringResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

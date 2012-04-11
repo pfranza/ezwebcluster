@@ -1,8 +1,7 @@
 package com.gorthaur.cluster.channels;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.util.Collection;
 import java.util.Properties;
 
@@ -37,6 +36,10 @@ public class AdministrationChannel {
 		public void receive(org.jgroups.Message msg) {
 			try {
 				ProtoBufHeader header = (ProtoBufHeader) msg.getHeader((short) 1900);
+				if(header == null || header.className == null) {
+					System.out.println("Dumping Message");
+					return;
+				}
 				if(header.className.equals(ClusterNode.class.getName())) {
 					ClusterNode node = ClusterNode.parseFrom(msg.getBuffer());
 					stateManager.processNewState(node, msg.getSrc());
@@ -70,11 +73,11 @@ public class AdministrationChannel {
 	
 	@Inject
 	AdministrationChannel() throws Exception {
+		ClassConfigurator.add((short) 1900, ProtoBufHeader.class);
 		channel=new JChannel();
 		channel.setReceiver(recv);
 		channel.connect("AdministrationChannel");
-		System.out.println("Local Name: " + channel.getName() );			
-		ClassConfigurator.add((short) 1900, ProtoBufHeader.class);
+		System.out.println("Local Name: " + channel.getName() );					
 	}
 	
 	public Collection<Address> getAddresses() {
@@ -121,13 +124,16 @@ public class AdministrationChannel {
             return className.length();
         }
 
-        public void writeTo(DataOutputStream out) throws IOException {
-            out.writeUTF(className);
+        @Override
+        public void writeTo(DataOutput out) throws Exception {
+        	out.writeUTF(className);
+        }
+        
+        @Override
+        public void readFrom(DataInput in) throws Exception {
+        	className = in.readUTF();
         }
 
-        public void readFrom(DataInputStream in) throws IOException, IllegalAccessException, InstantiationException {
-            className = in.readUTF();
-        }
 	}
 	
 }
