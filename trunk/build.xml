@@ -61,25 +61,40 @@
 	</target>
 	
 	<target name="package">
-		
+	
 		<path id="lib.path">
-		      <fileset dir="buildTools" includes="**/*.jar"/>
+		     <fileset dir="buildTools" includes="**/*.jar"/>
+			 <fileset dir="libs" includes="**/*.jar"/>
+			 <path refid="client.compile.classpath"/>
 		</path>
 		
+		<delete dir="outdir" failonerror="false"/>
+		<mkdir dir="outdir"/>
+		
+		<javac srcdir="modules/common/src:modules/loadbalancer/src:modules/webserver/src:modules/console/src" destdir="outdir" 
+			debug="true" classpathref="lib.path"/>
+				
 		<taskdef name="one-jar" classname="com.simontuffs.onejar.ant.OneJarTask" classpathref="lib.path"/>
 		
 		 <manifest file="manager.mf">
+		 	<attribute name="One-Jar-Main-Class" value="com.gorthaur.cluster.Boot"/>
+		 	<attribute name="One-Jar-Expand" value="war"/>
+		 	<attribute name="One-Jar-Expand-Dir" value="plugins/"/>
+		 	<attribute name="One-Jar-Show-Expand" value="true"/>
+		 	<attribute name="One-Jar-Confirm-Expand" value="false"/>
 		 </manifest>
 		 <one-jar destfile="manager.jar" manifest="manager.mf">
 		 	<main>
-		 		 <fileset dir="bin"/>
+		 		 <fileset dir="outdir"/>
 		 	</main>
             <lib>
-                <fileset file="libs/*.jar" />
+            	 <fileset dir="libs" includes="**/*.jar"/>
             </lib>
+		 	<fileset dir="modules/console" includes="war/**/*"/>
 		 </one-jar>
 		
-		 <delete file="manager.mf"/>
+		<delete dir="outdir" failonerror="false"/>
+		<delete file="manager.mf"/>
 	</target>
 	
 </project>
