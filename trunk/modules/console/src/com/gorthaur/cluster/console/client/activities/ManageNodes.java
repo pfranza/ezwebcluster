@@ -3,12 +3,15 @@ package com.gorthaur.cluster.console.client.activities;
 import javax.inject.Inject;
 
 import net.customware.gwt.dispatch.client.DispatchAsync;
+import net.customware.gwt.dispatch.shared.general.StringResult;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -17,8 +20,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gorthaur.cluster.console.client.AppPlaceHistoryMapper;
 import com.gorthaur.cluster.console.client.shared.ClusterNode;
+import com.gorthaur.cluster.console.client.shared.LaunchApplication;
 import com.gorthaur.cluster.console.client.shared.ListNodes;
 import com.gorthaur.cluster.console.client.shared.NodeCollection;
+import com.gorthaur.cluster.console.client.shared.TerminateApplication;
 
 public class ManageNodes extends AbstractCompositeActivity {
 
@@ -55,6 +60,7 @@ public class ManageNodes extends AbstractCompositeActivity {
 	};
 	
 	
+	
 
 	public ManageNodes() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -65,6 +71,42 @@ public class ManageNodes extends AbstractCompositeActivity {
 		super.start(panel, eventBus);
 		dispatcher.execute(new ListNodes(), handler);
 		machineName.setInnerText(((ManageNodesPlace)historyMapper.getPlace(History.getToken())).getToken());
+	}
+	
+	@UiHandler("launch")
+	void clickLaunch(ClickEvent evt) {
+		dispatcher.execute(new LaunchApplication(), new AsyncCallback<StringResult>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onSuccess(StringResult result) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+	}
+	
+	@UiHandler("kill")
+	void clickKill(ClickEvent evt) {
+		dispatcher.execute(new TerminateApplication(), new AsyncCallback<StringResult>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onSuccess(StringResult result) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 
 }

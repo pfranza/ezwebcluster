@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.jgroups.Address;
+
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.gorthaur.cluster.applications.LocalApplicationManager;
@@ -33,6 +35,10 @@ public class ClusterStateManager {
 		    .expireAfterWrite(10, TimeUnit.SECONDS)
 		    .build(); 
 	
+	private Cache<String, Address> addressCache = CacheBuilder.newBuilder()
+		    .expireAfterWrite(10, TimeUnit.SECONDS)
+		    .build(); 
+	
 	private Timer t = new Timer();
 	
 	private TimerTask task = new TimerTask() {		
@@ -52,6 +58,7 @@ public class ClusterStateManager {
 				
 				channel.publishMessage(ClusterNode.class, out.toByteArray());
 				cache.cleanUp();
+				addressCache.cleanUp();
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}			
@@ -62,8 +69,13 @@ public class ClusterStateManager {
 		t.scheduleAtFixedRate(task, 10000, 5000);
 	}
 
-	public void processNewState(ClusterNode node) {
+	public void processNewState(ClusterNode node, Address address) {
 		cache.put(node.getName(), node);
+		addressCache.put(node.getName(), address);
+	}
+	
+	public Address forNodeName(String name) {
+		return addressCache.getIfPresent(name);
 	}
 	
 	public Collection<ClusterNode> getAllNodes() {

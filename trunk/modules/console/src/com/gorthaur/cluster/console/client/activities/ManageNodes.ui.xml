@@ -10,6 +10,9 @@
 	  </g:ScrollPanel>
 	  <g:HTMLPanel>
 	  	<h2><span ui:field="machineName"/></h2>
+	  	<g:Button ui:field="launch">Launch LB</g:Button>
+	  	<g:Button ui:field="kill">Kill LB</g:Button>
+	  	
 	  </g:HTMLPanel>
 	  </g:HorizontalPanel>
 </ui:UiBinder> 
