@@ -3,6 +3,7 @@
 	<classpathentry kind="src" path="modules/common/src"/>
 	<classpathentry kind="src" path="modules/console/src"/>
 	<classpathentry kind="src" path="modules/loadbalancer/src"/>
+	<classpathentry kind="src" path="modules/webserver/src"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/guice/aopalliance.jar"/>

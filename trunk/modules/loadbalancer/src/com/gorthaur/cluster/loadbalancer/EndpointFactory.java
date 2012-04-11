@@ -8,9 +8,13 @@ import javax.inject.Singleton;
 @Singleton
 public class EndpointFactory {
 
+	int baseAddress = 49000;
+	int i = 0;
+	int max = 10;
+	
 	public SocketAddress getNextEndpoint() {
-		System.out.println("Fetch Address");
-		return new InetSocketAddress("72.215.147.158", 80);
+		i = (i + 1) % max;
+		return new InetSocketAddress("127.0.0.1", baseAddress + i);
 	}
 
 }
