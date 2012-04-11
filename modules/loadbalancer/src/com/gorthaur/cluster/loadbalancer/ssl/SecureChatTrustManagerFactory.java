@@ -57,7 +57,5 @@ public class SecureChatTrustManagerFactory extends TrustManagerFactorySpi {
 
 	@Override
 	protected void engineInit(ManagerFactoryParameters managerFactoryParameters)
-	throws InvalidAlgorithmParameterException {
-		// Unused
-	}
+	throws InvalidAlgorithmParameterException {}
 }

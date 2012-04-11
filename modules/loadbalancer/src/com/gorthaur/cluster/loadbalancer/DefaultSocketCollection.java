@@ -29,7 +29,6 @@ public class DefaultSocketCollection implements SocketCollection {
 	
 	@Override
 	public void create(int id, final Channel origionator) throws Exception {
-//		 socket = new Socket("72.215.147.158", 80);
 		 ClientBootstrap cb = new ClientBootstrap(cf);
 		 cb.getPipeline().addLast("handler", new OutboundHandler(origionator));
 		 ChannelFuture f = cb.connect(new InetSocketAddress("72.215.147.158", 80));
@@ -48,7 +47,6 @@ public class DefaultSocketCollection implements SocketCollection {
 
 	@Override
 	public void destroy(int id) throws Exception {
-		System.out.println("close " + id);
 		ChannelFuture f = channels.remove(id);
 		if(f != null) {
 			closeOnFlush(f.getChannel());
@@ -77,13 +75,11 @@ public class DefaultSocketCollection implements SocketCollection {
 				throws Exception {
 			ChannelBuffer msg = (ChannelBuffer) e.getMessage();
 			inboundChannel.write(msg);
-			System.out.println("Responding");
 		}
 
 		@Override
 		public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e)
 				throws Exception {
-			System.out.println("Proxy Socket Closed");
 			closeOnFlush(inboundChannel);
 		}
 
