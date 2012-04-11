@@ -7,12 +7,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.jetty.server.AbstractConnector;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.eclipse.jetty.server.nio.AbstractNIOConnector;
-import org.eclipse.jetty.server.nio.BlockingChannelConnector;
+import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
 
@@ -22,19 +22,18 @@ public class TestWebServer {
 	public static void main(String[] args) throws Exception {
 		Server server = new Server();
 		
-		int servers = 1;
+		int servers = 5;
 		int baseAddress = 49000;
 		
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 		for (int i = 0; i < servers; i++) {
-			AbstractNIOConnector connector = new BlockingChannelConnector(); //new SocketConnector();
+			AbstractConnector connector = new SelectChannelConnector();
+			
+			connector.setMaxIdleTime(15000);
+			connector.setAcceptors(1);
 			connector.setPort(baseAddress + i);
-			connector.setMaxIdleTime(30000);
-			connector.setAcceptQueueSize(500);
 			connectors.add(connector);
 		}
-		
-		System.out.println("Binding: " + connectors.size());
 		
 		QueuedThreadPool threadPool = new QueuedThreadPool();
 			threadPool.setMinThreads(10);
