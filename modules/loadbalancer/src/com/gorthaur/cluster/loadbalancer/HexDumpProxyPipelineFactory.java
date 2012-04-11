@@ -9,7 +9,7 @@ import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.handler.ssl.SslHandler;
 
-import com.atlt.loadbalancer.ssl.SecureChatSslContextFactory;
+import com.gorthaur.cluster.loadbalancer.ssl.SecureChatSslContextFactory;
 
 public class HexDumpProxyPipelineFactory implements ChannelPipelineFactory {
 
