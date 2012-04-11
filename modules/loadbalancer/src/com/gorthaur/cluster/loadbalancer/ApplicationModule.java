@@ -15,11 +15,9 @@ public class ApplicationModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		Executor executor = Executors.newCachedThreadPool();
-		
+		bind(Executor.class).toInstance(executor);
 		bind(ClientSocketChannelFactory.class).toInstance(new NioClientSocketChannelFactory(executor, executor));
 		bind(ServerBootstrap.class).toInstance(new ServerBootstrap(new NioServerSocketChannelFactory(executor, executor)));
-		
-		
 	}
 
 }

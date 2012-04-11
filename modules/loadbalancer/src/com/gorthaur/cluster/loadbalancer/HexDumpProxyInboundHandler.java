@@ -1,5 +1,7 @@
 package com.gorthaur.cluster.loadbalancer;
 
+import java.util.concurrent.Executor;
+
 import javax.inject.Inject;
 
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -12,34 +14,51 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
+import com.gorthaur.cluster.loadbalancer.remote.ProxyChannel;
+import com.gorthaur.cluster.loadbalancer.remote.SocketCollection;
 
 public class HexDumpProxyInboundHandler extends SimpleChannelUpstreamHandler {
 
 	private SocketCollection sockets;
+	private Executor executor;
 	
     @Inject
-    public HexDumpProxyInboundHandler(SocketCollection sockets) {
+    public HexDumpProxyInboundHandler(SocketCollection sockets, Executor executor) {
         this.sockets = sockets;
+        this.executor = executor;
     }
 
     @Override
-    public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
+    public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent e)
             throws Exception {
     	ChannelBuffer msg = (ChannelBuffer) e.getMessage();    	
-    	Channel proxyChannel = sockets.get(e.getChannel().getId());
-    	proxyChannel.write(msg);
+    	ProxyChannel proxyChannel = sockets.get(e.getChannel());
+    	if(!proxyChannel.write(msg)) {
+    		sockets.destroy(e.getChannel());
+//    		executor.execute(new Runnable() {			
+//				@Override
+//				public void run() {
+//					try {
+//						System.out.println("Resend");
+//						messageReceived(ctx, e);
+//					} catch (Exception e) {
+//						throw new RuntimeException(e);
+//					}
+//				}
+//			});
+    	}
     }
     
     @Override
     public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent e)
     		throws Exception {
-    	sockets.create(e.getChannel().getId(), e.getChannel());
+    	sockets.create(e.getChannel());
     }
     
     @Override
     public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e)
     		throws Exception {
-    	sockets.destroy(e.getChannel().getId());
+    	sockets.destroy(e.getChannel());
     }
     
     @Override
