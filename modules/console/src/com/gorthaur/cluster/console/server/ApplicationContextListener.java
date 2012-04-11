@@ -14,6 +14,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 	@Override
 	protected Injector getInjector() {
 		if(INJECTOR == null) {
+			System.out.println("Creating new injector");
 			INJECTOR = Guice.createInjector();
 		}
 		

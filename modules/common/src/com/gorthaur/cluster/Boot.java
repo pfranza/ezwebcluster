@@ -34,7 +34,7 @@ public class Boot {
 		if(commandLine.hasOption("console")) {
 			int consolePort = Integer.valueOf(commandLine.getOptionValue("console"));
 			System.out.println("Console On Port " + consolePort);
-			new WebContainer(consolePort, new File("war"));
+			new WebContainer(consolePort, new File("modules/console/war"));
 		} else {
 			System.out.println("Launch Slave");
 		}

@@ -8,6 +8,14 @@ public class LaunchApplication implements Action<StringResult> {
 	private String applicationClassName;
 	private String nodeAddress;
 	
+	LaunchApplication(){}
+	
+	public LaunchApplication(String applicationClassName, String nodeAddress) {
+		super();
+		this.applicationClassName = applicationClassName;
+		this.nodeAddress = nodeAddress;
+	}
+
 	public String getApplicationClassName() {
 		return applicationClassName;
 	}
