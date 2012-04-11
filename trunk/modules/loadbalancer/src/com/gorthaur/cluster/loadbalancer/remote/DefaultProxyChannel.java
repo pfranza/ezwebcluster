@@ -42,7 +42,9 @@ public class DefaultProxyChannel implements ProxyChannel {
 	}
 
 	@Override
-	public void close() {}
+	public void close() {
+		
+	}
 
 
 }
