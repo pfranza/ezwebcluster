@@ -39,7 +39,7 @@ public class AdministrationChannel {
 				ProtoBufHeader header = (ProtoBufHeader) msg.getHeader((short) 1900);
 				if(header.className.equals(ClusterNode.class.getName())) {
 					ClusterNode node = ClusterNode.parseFrom(msg.getBuffer());
-					stateManager.processNewState(node);
+					stateManager.processNewState(node, msg.getSrc());
 				} else if(header.className.equals(LaunchApplication.class.getName())) {
 					LaunchApplication application = LaunchApplication.parseFrom(msg.getBuffer());
 					Properties properties = new Properties();
@@ -82,11 +82,19 @@ public class AdministrationChannel {
 	}
 
 	public String getName() {
-		return channel.getName();
+		return channel.getAddressAsString();
 	}
 
 	public void publishMessage(Class<?> cls, byte[] bytes) throws Exception {
-		publishMessage(null, cls, bytes);
+		publishMessage((Address)null, cls, bytes);
+	}
+	
+	public void publishMessage(String address, Class<?> cls, byte[] bytes) throws Exception {
+		publishMessage(getAddressForString(address), cls, bytes);
+	}
+	
+	private Address getAddressForString(String s) {
+		return stateManager.forNodeName(s);
 	}
 	
 	public void publishMessage(Address address, Class<?> cls, byte[] bytes) throws Exception {
