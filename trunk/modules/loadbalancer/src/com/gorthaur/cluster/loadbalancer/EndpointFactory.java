@@ -10,7 +10,7 @@ public class EndpointFactory {
 
 	int baseAddress = 49000;
 	int i = 0;
-	int max = 20;
+	int max = 5;
 	
 	public SocketAddress getNextEndpoint() {
 		i = (i + 1) % max;
