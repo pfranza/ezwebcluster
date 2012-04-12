@@ -1,8 +1,13 @@
 package com.gorthaur.cluster.datafiles;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.util.UUID;
+import java.util.zip.Adler32;
 
 import javax.inject.Singleton;
+
+import org.apache.commons.io.FileUtils;
 
 import com.gorthaur.cluster.protocol.Cluster.ClusterNode.Builder;
 import com.gorthaur.cluster.protocol.Cluster.ClusterNode.DataFile;
@@ -11,19 +16,33 @@ import com.gorthaur.cluster.protocol.Cluster.ReplicateFile;
 @Singleton
 public class DefaultDataFileManager implements DataFileManager {
 
-	private File directory = new File("data");
+	private File directory = new File(new File("data"), UUID.randomUUID().toString());
 	
-	public DefaultDataFileManager() {
-		if(directory.exists()) {
-			directory.delete();
-		}
-		
+	public DefaultDataFileManager() throws Exception {
 		directory.mkdirs();
+		FileUtils.cleanDirectory(directory);
 	}
 
 	@Override
 	public void createFile(ReplicateFile file) {
-		// TODO Auto-generated method stub
+		File f = new File(directory, file.getName());
+
+		try {
+			if(f.exists() && file.getChecksum().equals(createChecksum(f))) {
+				System.out.println("File is uptodate");
+			} else {
+				FileOutputStream fos = new FileOutputStream(f);
+				fos.write(file.getData().toByteArray());
+				fos.close();
+				
+				if(!(f.exists() && file.getChecksum().equals(createChecksum(f)))) {
+					f.delete();
+					System.out.println("File Checksum Mismatch");
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 
@@ -40,8 +59,11 @@ public class DefaultDataFileManager implements DataFileManager {
 	}
 
 	private String createChecksum(File f) {
-		// TODO Auto-generated method stub
-		return "";
+		try {
+		return "" + FileUtils.checksum(f, new Adler32()).getValue();
+		} catch (Exception e) {
+			return "";
+		}
 	}
 	
 }

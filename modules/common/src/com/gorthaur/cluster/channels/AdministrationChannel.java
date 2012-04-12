@@ -19,7 +19,7 @@ import org.jgroups.util.Streamable;
 
 import com.gorthaur.cluster.ClusterStateManager;
 import com.gorthaur.cluster.applications.Application;
-import com.gorthaur.cluster.applications.LocalApplicationManager;
+import com.gorthaur.cluster.applications.DefaultLocalApplicationManager;
 import com.gorthaur.cluster.datafiles.DataFileManager;
 import com.gorthaur.cluster.protocol.Cluster.ClusterNode;
 import com.gorthaur.cluster.protocol.Cluster.LaunchApplication;
@@ -78,7 +78,7 @@ public class AdministrationChannel {
 	};
 	
 	@Inject ClusterStateManager stateManager;
-	@Inject LocalApplicationManager applicationManager;
+	@Inject DefaultLocalApplicationManager applicationManager;
 	@Inject DataFileManager dataFileManager;
 	
 	@Inject
