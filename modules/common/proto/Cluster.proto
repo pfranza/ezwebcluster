@@ -9,8 +9,16 @@ message ClusterNode {
 	required string name = 1;
 
   	message ActiveApplications {
+  	
+  		enum ApplicationStatus {
+  			STARTING = 0;
+  			RUNNING = 1;
+  			STOPPING = 1;
+  		}
+  	
   		required string name = 1;
   		required string applicationId = 2;
+  		required ApplicationStatus status = 3;
   	}
 
 	repeated ActiveApplications applications = 2;
@@ -20,7 +28,16 @@ message ClusterNode {
 	
 	optional float cpuUtilization = 5;
 	optional uint64 cpuFrequency = 6;
+	
+	message DataFile {
+		required string checksum = 1;
+		required string filename = 2;
+	}
+	
+	repeated DataFile files = 7;
 }
+
+message TerminateClusterNode {}
 
 message LaunchApplication {
 	required string clsName = 1;
@@ -33,4 +50,9 @@ message LaunchApplication {
 
 message ShutdownApplication {
 	required string applicationId = 1;
+}
+
+message ReplicateFile{
+	required string checksum = 1;
+	required bytes  data = 2;
 }

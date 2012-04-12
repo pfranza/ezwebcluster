@@ -11,6 +11,9 @@ import javax.inject.Singleton;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.gorthaur.cluster.protocol.Cluster.ClusterNode.ActiveApplications;
+import com.gorthaur.cluster.protocol.Cluster.ClusterNode.ActiveApplications.ApplicationStatus;
+import com.gorthaur.cluster.protocol.Cluster.ClusterNode.Builder;
 
 @Singleton
 public class LocalApplicationManager {
@@ -51,6 +54,17 @@ public class LocalApplicationManager {
 	private static class ApplicationWrapper {
 		String applicationid;
 		Application application;
+	}
+
+	public void populateStatus(Builder builder) {
+		for(ApplicationWrapper a: applications) {
+			ActiveApplications app = ActiveApplications.newBuilder()
+					.setApplicationId(a.applicationid)
+					.setName(a.application.getClass().getName())
+					.setStatus(ApplicationStatus.RUNNING)
+					.build();
+			builder.addApplications(app);
+		}
 	}
 	
 }
