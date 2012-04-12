@@ -16,7 +16,9 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.gorthaur.cluster.applications.LocalApplicationManager;
 import com.gorthaur.cluster.channels.AdministrationChannel;
+import com.gorthaur.cluster.datafiles.DataFileManager;
 import com.gorthaur.cluster.protocol.Cluster.ClusterNode;
+import com.gorthaur.cluster.protocol.Cluster.ClusterNode.Builder;
 import com.jezhumble.javasysmon.CpuTimes;
 import com.jezhumble.javasysmon.JavaSysMon;
 
@@ -27,6 +29,7 @@ public class ClusterStateManager {
 	AdministrationChannel channel;
 	
 	@Inject LocalApplicationManager applicationManager;
+	@Inject DataFileManager dataFileManager;
 	
 	private JavaSysMon monitor = new JavaSysMon();
 	private CpuTimes prevTimes;
@@ -45,13 +48,17 @@ public class ClusterStateManager {
 		@Override
 		public void run() {
 			try {
-				ClusterNode node = ClusterNode.newBuilder()
+				Builder builder = ClusterNode.newBuilder()
 						.setName(channel.getName())
 						.setCpuFrequency(monitor.cpuFrequencyInHz())
 						.setCpuUtilization(prevTimes != null ? monitor.cpuTimes().getCpuUsage(prevTimes) : 0 )
 						.setMemoryFreeBytes(monitor.physical().getFreeBytes())
-						.setMemoryTotalBytes(monitor.physical().getTotalBytes())
-						.build();
+						.setMemoryTotalBytes(monitor.physical().getTotalBytes());
+						
+				applicationManager.populateStatus(builder);
+				dataFileManager.populateStatus(builder);
+				
+				ClusterNode node = builder.build();
 	
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				node.writeTo(out);

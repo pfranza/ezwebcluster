@@ -20,10 +20,13 @@ import org.jgroups.util.Streamable;
 import com.gorthaur.cluster.ClusterStateManager;
 import com.gorthaur.cluster.applications.Application;
 import com.gorthaur.cluster.applications.LocalApplicationManager;
+import com.gorthaur.cluster.datafiles.DataFileManager;
 import com.gorthaur.cluster.protocol.Cluster.ClusterNode;
 import com.gorthaur.cluster.protocol.Cluster.LaunchApplication;
 import com.gorthaur.cluster.protocol.Cluster.LaunchApplication.Property;
+import com.gorthaur.cluster.protocol.Cluster.ReplicateFile;
 import com.gorthaur.cluster.protocol.Cluster.ShutdownApplication;
+import com.gorthaur.cluster.protocol.Cluster.TerminateClusterNode;
 
 @Singleton
 public class AdministrationChannel {
@@ -53,6 +56,12 @@ public class AdministrationChannel {
 				} else if(header.className.equals(ShutdownApplication.class.getName())) {
 					ShutdownApplication application = ShutdownApplication.parseFrom(msg.getBuffer());
 					applicationManager.shutdownApplication(application.getApplicationId());
+				} else if(header.className.equals(TerminateClusterNode.class.getName())) {
+					System.out.println("Terminating Cluster Node: ");
+					System.exit(0);
+				} else if(header.className.equals(ReplicateFile.class.getName())) {
+					ReplicateFile file = ReplicateFile.parseFrom(msg.getBuffer());
+					dataFileManager.createFile(file);
 				} else {
 					System.out.println("Unknown class: " + header.className);
 				}
@@ -70,6 +79,7 @@ public class AdministrationChannel {
 	
 	@Inject ClusterStateManager stateManager;
 	@Inject LocalApplicationManager applicationManager;
+	@Inject DataFileManager dataFileManager;
 	
 	@Inject
 	AdministrationChannel() throws Exception {
