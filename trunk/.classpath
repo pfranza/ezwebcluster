@@ -26,6 +26,7 @@
 	<classpathentry kind="lib" path="libs/jetty/jetty-websocket-8.1.2.v20120308.jar"/>
 	<classpathentry kind="lib" path="libs/jetty/jetty-xml-8.1.2.v20120308.jar"/>
 	<classpathentry kind="lib" path="libs/jetty/servlet-api-3.0.jar"/>
+	<classpathentry kind="lib" path="libs/commons-io-2.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/guice/aopalliance.jar"/>
 	<classpathentry kind="lib" path="libs/guice/guice-3.0.jar"/>

@@ -53,6 +53,7 @@ message ShutdownApplication {
 }
 
 message ReplicateFile{
+	required string name = 3;
 	required string checksum = 1;
 	required bytes  data = 2;
 }

@@ -14,7 +14,7 @@ import org.jgroups.Address;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.gorthaur.cluster.applications.LocalApplicationManager;
+import com.gorthaur.cluster.applications.DefaultLocalApplicationManager;
 import com.gorthaur.cluster.channels.AdministrationChannel;
 import com.gorthaur.cluster.datafiles.DataFileManager;
 import com.gorthaur.cluster.protocol.Cluster.ClusterNode;
@@ -28,7 +28,7 @@ public class ClusterStateManager {
 	@Inject
 	AdministrationChannel channel;
 	
-	@Inject LocalApplicationManager applicationManager;
+	@Inject DefaultLocalApplicationManager applicationManager;
 	@Inject DataFileManager dataFileManager;
 	
 	private JavaSysMon monitor = new JavaSysMon();

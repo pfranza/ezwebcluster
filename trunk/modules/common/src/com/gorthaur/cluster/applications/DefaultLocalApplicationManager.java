@@ -16,7 +16,7 @@ import com.gorthaur.cluster.protocol.Cluster.ClusterNode.ActiveApplications.Appl
 import com.gorthaur.cluster.protocol.Cluster.ClusterNode.Builder;
 
 @Singleton
-public class LocalApplicationManager {
+public class DefaultLocalApplicationManager implements ApplicationManager {
 
 	@Inject
 	Injector injector;
@@ -29,6 +29,7 @@ public class LocalApplicationManager {
 		executor = Executors.newCachedThreadPool();
 	}
 	
+	@Override
 	public void launchApplication(Class<? extends Application> cls, Properties configuration) {
 		Application app = injector.getInstance(cls);
 		ApplicationWrapper w = new ApplicationWrapper();
@@ -40,6 +41,7 @@ public class LocalApplicationManager {
 		executor.execute(app);
 	}
 	
+	@Override
 	public void shutdownApplication(String applicationId) {
 		for (Iterator<ApplicationWrapper> iterator = applications.iterator(); iterator.hasNext();) {
 			ApplicationWrapper type = iterator.next();
@@ -56,6 +58,7 @@ public class LocalApplicationManager {
 		Application application;
 	}
 
+	@Override
 	public void populateStatus(Builder builder) {
 		for(ApplicationWrapper a: applications) {
 			ActiveApplications app = ActiveApplications.newBuilder()
