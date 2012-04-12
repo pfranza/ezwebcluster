@@ -1,4 +1,4 @@
-<project default="compile">
+<project default="all">
 
 	<property name="gwt.home" location="buildtools/gwt-2.4.0" />
 
@@ -40,7 +40,7 @@
 		
 	</target>
 	
-	<target name="compile" depends="protobuf">
+	<target name="gwtc" depends="protobuf">
 			<javac srcdir="modules/console/src" destdir="modules/console/war/WEB-INF/classes" 
 					debug="true" classpathref="client.compile.classpath"/>
 			
@@ -94,7 +94,10 @@
 			<fileset dir="buildTools" includes="appstart.properties"/>
 		</copy>
 		
+		<zip destfile="cluster.zip" basedir="output"/>
 		
 	</target>
+	
+	<target name="all" depends="gwtc, package"/>
 	
 </project>
