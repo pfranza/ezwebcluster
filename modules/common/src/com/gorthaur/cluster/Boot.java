@@ -34,10 +34,12 @@ public class Boot {
 		if(commandLine.hasOption("console")) {
 			int consolePort = Integer.valueOf(commandLine.getOptionValue("console"));
 			System.out.println("Console On Port " + consolePort);
-			if(new File("modules/console/war").exists()) {
+			if(new File("lib/console.war").exists()) {
+				new WebContainer(consolePort, new File("lib/console.war"));
+			} else if(new File("modules/console/war").exists()) {
 				new WebContainer(consolePort, new File("modules/console/war"));
-			} else if(new File("plugins/war").exists()) {
-				new WebContainer(consolePort, new File("plugins/war"));
+			} else {
+				System.out.println("Console war not found!");
 			}
 		} else {
 			System.out.println("Launch Slave");

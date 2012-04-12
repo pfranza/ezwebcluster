@@ -74,27 +74,27 @@
 		<javac srcdir="modules/common/src:modules/loadbalancer/src:modules/webserver/src:modules/console/src" destdir="outdir" 
 			debug="true" classpathref="lib.path"/>
 				
-		<taskdef name="one-jar" classname="com.simontuffs.onejar.ant.OneJarTask" classpathref="lib.path"/>
+		<delete dir="output" failonerror="false"/>
+		<mkdir dir="output/lib"/>
 		
-		 <manifest file="manager.mf">
-		 	<attribute name="One-Jar-Main-Class" value="com.gorthaur.cluster.Boot"/>
-		 	<attribute name="One-Jar-Expand" value="war"/>
-		 	<attribute name="One-Jar-Expand-Dir" value="plugins/"/>
-		 	<attribute name="One-Jar-Show-Expand" value="true"/>
-		 	<attribute name="One-Jar-Confirm-Expand" value="false"/>
-		 </manifest>
-		 <one-jar destfile="manager.jar" manifest="manager.mf">
-		 	<main>
-		 		 <fileset dir="outdir"/>
-		 	</main>
-            <lib>
-            	 <fileset dir="libs" includes="**/*.jar"/>
-            </lib>
-		 	<fileset dir="modules/console" includes="war/**/*"/>
-		 </one-jar>
-		
+		<jar destfile="output/lib/cluster.jar" basedir="outdir"/>
 		<delete dir="outdir" failonerror="false"/>
-		<delete file="manager.mf"/>
+		
+		<copy todir="output/lib" flatten="true">
+			<fileset dir="libs" includes="**/*.jar"/>
+		</copy>
+		
+		<copy todir="output/lib" flatten="true">
+			<fileset dir="modules" includes="**/*.jar"/>
+			<fileset dir="modules" includes="**/*.war"/>
+		</copy>
+		
+		<copy todir="output">
+			<fileset dir="buildTools" includes="start.jar"/>
+			<fileset dir="buildTools" includes="appstart.properties"/>
+		</copy>
+		
+		
 	</target>
 	
 </project>
