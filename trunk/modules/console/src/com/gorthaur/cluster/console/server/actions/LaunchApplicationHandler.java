@@ -4,14 +4,13 @@ import java.io.ByteArrayOutputStream;
 
 import javax.inject.Inject;
 
-import com.gorthaur.cluster.channels.AdministrationChannel;
-import com.gorthaur.cluster.console.client.shared.LaunchApplication;
-import com.gorthaur.cluster.loadbalancer.LoadBalancerApplication;
-
 import net.customware.gwt.dispatch.server.ActionHandler;
 import net.customware.gwt.dispatch.server.ExecutionContext;
 import net.customware.gwt.dispatch.shared.DispatchException;
 import net.customware.gwt.dispatch.shared.general.StringResult;
+
+import com.gorthaur.cluster.channels.AdministrationChannel;
+import com.gorthaur.cluster.console.client.shared.LaunchApplication;
 
 public class LaunchApplicationHandler implements ActionHandler<LaunchApplication, StringResult>{
 
@@ -23,8 +22,7 @@ public class LaunchApplicationHandler implements ActionHandler<LaunchApplication
 			throws DispatchException {
 		try {
 			com.gorthaur.cluster.protocol.Cluster.LaunchApplication msg = com.gorthaur.cluster.protocol.Cluster.LaunchApplication.newBuilder()
-//					.setClsName(arg0.getApplicationClassName())
-					.setClsName(LoadBalancerApplication.class.getName())
+					.setClsName(arg0.getApplicationClassName())
 					.build();
 
 			ByteArrayOutputStream out = new ByteArrayOutputStream();

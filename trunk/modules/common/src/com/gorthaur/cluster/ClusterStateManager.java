@@ -48,22 +48,7 @@ public class ClusterStateManager {
 		@Override
 		public void run() {
 			try {
-				Builder builder = ClusterNode.newBuilder()
-						.setName(channel.getName())
-						.setCpuFrequency(monitor.cpuFrequencyInHz())
-						.setCpuUtilization(prevTimes != null ? monitor.cpuTimes().getCpuUsage(prevTimes) : 0 )
-						.setMemoryFreeBytes(monitor.physical().getFreeBytes())
-						.setMemoryTotalBytes(monitor.physical().getTotalBytes());
-						
-				applicationManager.populateStatus(builder);
-				dataFileManager.populateStatus(builder);
-				
-				ClusterNode node = builder.build();
-	
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				node.writeTo(out);
-				
-				channel.publishMessage(ClusterNode.class, out.toByteArray());
+				forceStatusSend();
 				cache.cleanUp();
 				addressCache.cleanUp();
 			} catch (Exception e) {
@@ -89,6 +74,29 @@ public class ClusterStateManager {
 		ArrayList<ClusterNode> list = new ArrayList<ClusterNode>();
 		list.addAll(cache.asMap().values());
 		return list;
+	}
+
+	public void forceStatusSend() {
+		try {
+			Builder builder = ClusterNode.newBuilder()
+					.setName(channel.getName())
+					.setCpuFrequency(monitor.cpuFrequencyInHz())
+					.setCpuUtilization(prevTimes != null ? monitor.cpuTimes().getCpuUsage(prevTimes) : 0 )
+					.setMemoryFreeBytes(monitor.physical().getFreeBytes())
+					.setMemoryTotalBytes(monitor.physical().getTotalBytes());
+
+			applicationManager.populateStatus(builder);
+			dataFileManager.populateStatus(builder);
+
+			ClusterNode node = builder.build();
+
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			node.writeTo(out);
+
+			channel.publishMessage(ClusterNode.class, out.toByteArray());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 }
