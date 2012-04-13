@@ -1,6 +1,7 @@
 package com.gorthaur.cluster.console.server.actions;
 
 import com.gorthaur.cluster.console.client.shared.LaunchApplication;
+import com.gorthaur.cluster.console.client.shared.ListNodeInfo;
 import com.gorthaur.cluster.console.client.shared.ListNodes;
 import com.gorthaur.cluster.console.client.shared.TerminateApplication;
 
@@ -13,6 +14,7 @@ public class ActionsModule extends ActionHandlerModule {
 		bindHandler(ListNodes.class, ListNodesHandler.class);
 		bindHandler(LaunchApplication.class, LaunchApplicationHandler.class);
 		bindHandler(TerminateApplication.class, TerminateApplicationHandler.class);
+		bindHandler(ListNodeInfo.class, ListNodeInfoHandler.class);
 	}
 
 }

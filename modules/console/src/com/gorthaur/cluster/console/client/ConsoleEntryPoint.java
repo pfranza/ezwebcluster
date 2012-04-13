@@ -9,6 +9,7 @@ import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.gorthaur.cluster.console.client.activities.ManageNodesPlace;
 
 public class ConsoleEntryPoint implements EntryPoint {
@@ -26,11 +27,15 @@ public class ConsoleEntryPoint implements EntryPoint {
         ActivityManager activityManager = new ActivityManager(activityMapper, eventBus);
         activityManager.setDisplay(new AcceptsOneWidget() {
 			
+        	SimplePanel p = new SimplePanel();
+        	
+        	{
+        		RootLayoutPanel.get().add(p);
+        	}
+        	
 			@Override
 			public void setWidget(IsWidget w) {
-				System.out.println("Set Wid");
-				RootLayoutPanel.get().clear();
-				RootLayoutPanel.get().add(w);
+				p.setWidget(w);
 			}
 		});
 

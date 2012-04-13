@@ -10,8 +10,20 @@
 	  </g:ScrollPanel>
 	  <g:HTMLPanel>
 	  	<h2><span ui:field="machineName"/></h2>
-	  	<g:Button ui:field="launch">Launch LB</g:Button>
-	  	<g:Button ui:field="kill">Kill LB</g:Button>
+	  	<b>Memory Percent Free: </b><span ui:field="memoryFreePercent"/><br/>
+	  	<b>CPU Used: </b><span ui:field="cpuUtilization"/><br/>
+	  	
+	  	<h3>Files</h3>
+	  	<g:FlexTable ui:field="filesSynced"/>
+	  	
+	  	<h3>Applications</h3>
+	  	<g:FlexTable ui:field="applications"/>
+	  	
+	  	<fieldset>
+	  		<legend>Applications</legend>
+	  		<g:Button ui:field="launchBalancer">Launch Load Balancer</g:Button>
+	  		<g:Button ui:field="launchWebServer">Launch Web Server</g:Button>
+	  	</fieldset>
 	  	
 	  </g:HTMLPanel>
 	  </g:HorizontalPanel>

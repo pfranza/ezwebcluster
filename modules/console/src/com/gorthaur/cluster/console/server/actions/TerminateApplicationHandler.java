@@ -28,7 +28,7 @@ public class TerminateApplicationHandler implements ActionHandler<TerminateAppli
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			msg.writeTo(out);
 
-			channel.publishMessage(arg0.getNodeAddress(), com.gorthaur.cluster.protocol.Cluster.LaunchApplication.class, out.toByteArray());
+			channel.publishMessage(arg0.getNodeAddress(), msg.getClass(), out.toByteArray());
 
 			return new StringResult("OK");
 		} catch (Exception e) {

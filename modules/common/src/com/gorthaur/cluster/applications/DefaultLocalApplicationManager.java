@@ -11,6 +11,7 @@ import javax.inject.Singleton;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.gorthaur.cluster.ClusterStateManager;
 import com.gorthaur.cluster.protocol.Cluster.ClusterNode.ActiveApplications;
 import com.gorthaur.cluster.protocol.Cluster.ClusterNode.ActiveApplications.ApplicationStatus;
 import com.gorthaur.cluster.protocol.Cluster.ClusterNode.Builder;
@@ -20,6 +21,9 @@ public class DefaultLocalApplicationManager implements ApplicationManager {
 
 	@Inject
 	Injector injector;
+	
+	@Inject
+	ClusterStateManager stateManager;
 	
 	private ArrayList<ApplicationWrapper> applications = new ArrayList<ApplicationWrapper>();
 	
@@ -39,6 +43,7 @@ public class DefaultLocalApplicationManager implements ApplicationManager {
 		applications.add(w);
 		app.configure(configuration);
 		executor.execute(app);
+		stateManager.forceStatusSend();
 	}
 	
 	@Override
@@ -47,6 +52,7 @@ public class DefaultLocalApplicationManager implements ApplicationManager {
 			ApplicationWrapper type = iterator.next();
 			if(type.applicationid.equals(applicationId)) {
 				type.application.stop();
+				stateManager.forceStatusSend();
 				iterator.remove();
 				return;
 			}
@@ -63,7 +69,7 @@ public class DefaultLocalApplicationManager implements ApplicationManager {
 		for(ApplicationWrapper a: applications) {
 			ActiveApplications app = ActiveApplications.newBuilder()
 					.setApplicationId(a.applicationid)
-					.setName(a.application.getClass().getName())
+					.setName(a.application.getClass().getSimpleName())
 					.setStatus(ApplicationStatus.RUNNING)
 					.build();
 			builder.addApplications(app);
