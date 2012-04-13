@@ -31,6 +31,7 @@ import com.gorthaur.cluster.console.client.shared.ListNodeInfo;
 import com.gorthaur.cluster.console.client.shared.ListNodes;
 import com.gorthaur.cluster.console.client.shared.NodeCollection;
 import com.gorthaur.cluster.console.client.shared.TerminateApplication;
+import com.gorthaur.cluster.console.client.shared.TerminateNode;
 
 public class ManageNodes extends AbstractCompositeActivity {
 
@@ -200,6 +201,23 @@ public class ManageNodes extends AbstractCompositeActivity {
 			public void onSuccess(StringResult result) {
 				// TODO Auto-generated method stub
 				
+			}
+		});
+	}
+	
+	@UiHandler("terminateNode")
+	void clickTerminateNode(ClickEvent evt) {
+		dispatcher.execute(new TerminateNode(machineName.getInnerText()), new AsyncCallback<StringResult>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onSuccess(StringResult result) {
+				dispatcher.execute(new ListNodes(), handler);
 			}
 		});
 	}
