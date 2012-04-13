@@ -25,6 +25,8 @@
 	  		<g:Button ui:field="launchWebServer">Launch Web Server</g:Button>
 	  	</fieldset>
 	  	
+	  	<g:Button ui:field="terminateNode">Terminate Node</g:Button>
+	  	
 	  </g:HTMLPanel>
 	  </g:HorizontalPanel>
 </ui:UiBinder> 
