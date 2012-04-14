@@ -23,14 +23,18 @@ import com.gorthaur.cluster.protocol.Cluster.WebServerState;
 public class DefaultWebServerStateManager implements WebServerStateManager {
 
 	private LoadingCache<String, ApplicationCluster> cache = CacheBuilder.newBuilder()
-		    .expireAfterAccess(10, TimeUnit.SECONDS)
+		    .expireAfterAccess(1, TimeUnit.MINUTES)
+		    .removalListener(new RemovalListener<String, ApplicationCluster>() {
+				@Override
+				public void onRemoval(RemovalNotification<String, ApplicationCluster> arg0) {
+					System.out.println("Dropping Application: " + arg0.getKey());
+				}
+			})
 		    .build(new CacheLoader<String, ApplicationCluster>(){
-
 				@Override
 				public ApplicationCluster load(String arg0) throws Exception {
 					return new ApplicationCluster(arg0);
 				}
-		    	
 		    });
 	
 	@Override
@@ -52,9 +56,10 @@ public class DefaultWebServerStateManager implements WebServerStateManager {
 		private Cache<String, List<SocketAddress>> accessablePorts = CacheBuilder.newBuilder()
 				.removalListener(new RemovalListener<String, List<SocketAddress>>() {
 					@Override
-					public void onRemoval(
-							RemovalNotification<String, List<SocketAddress>> arg0) {
+					public void onRemoval(RemovalNotification<String, List<SocketAddress>> arg0) {
 						completeList.removeAll(arg0.getValue());
+						System.out.println("List removal: " + arg0.getValue().size());
+						System.out.println(completeList.size());
 					}
 				})
 			    .expireAfterWrite(30, TimeUnit.SECONDS)
@@ -78,7 +83,7 @@ public class DefaultWebServerStateManager implements WebServerStateManager {
 					try {
 						List<SocketAddress> list = accessablePorts.getIfPresent(ipaddress);
 						if(list != null && list.size() > 0) {
-							accessablePorts.put(ipaddress, list);
+
 						} else if(addr.isReachable(5000)) {
 							System.out.println("Is reachable: " + ipaddress);
 							list = new ArrayList<SocketAddress>();
@@ -99,9 +104,9 @@ public class DefaultWebServerStateManager implements WebServerStateManager {
 			}
 		}
 		
-		public String getChecksum() {
-			return checksum;
-		}
+//		public String getChecksum() {
+//			return checksum;
+//		}
 		
 		public void setChecksum(String checksum) {
 			this.checksum = checksum;
