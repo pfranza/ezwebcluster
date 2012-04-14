@@ -25,6 +25,7 @@ public class DefaultDataFileManager implements DataFileManager {
 
 	@Override
 	public void createFile(ReplicateFile file) {
+		System.out.println("Creating File");
 		File f = new File(directory, file.getName());
 
 		try {
