@@ -1,5 +1,6 @@
 package com.gorthaur.cluster.loadbalancer.remote;
 
+import java.net.SocketAddress;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -51,7 +52,9 @@ public class DefaultSocketCollection implements SocketCollection {
 		             public ProxyChannel load(final Channel origionator) throws Exception {	            	 
 		            	 ClientBootstrap cb = new ClientBootstrap(cf);
 		        		 cb.getPipeline().addLast("handler", new OutboundHandler(origionator));
-		        		 ChannelFuture f = cb.connect(endpointFactory.getNextEndpoint());
+		        		 SocketAddress endPoint = endpointFactory.getNextEndpoint();
+//		        		 System.out.println("Using: " + endPoint);
+		        		 ChannelFuture f = cb.connect(endPoint);
 		        		 return channelProvider.get().bind(f, origionator);
 		            	 
 		             }
