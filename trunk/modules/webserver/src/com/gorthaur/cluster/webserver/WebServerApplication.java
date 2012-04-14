@@ -1,6 +1,7 @@
 package com.gorthaur.cluster.webserver;
 
 import java.io.ByteArrayOutputStream;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -102,7 +103,9 @@ public class WebServerApplication implements Application {
 				InetAddress[] allMyIps = InetAddress.getAllByName(localhost.getCanonicalHostName());
 				if (allMyIps != null && allMyIps.length > 1) {
 					for (int i = 0; i < allMyIps.length; i++) {
-						stateBuilder.addIpaddress(InetAddresses.toAddrString(allMyIps[i]));
+						if(allMyIps[i] instanceof Inet4Address) {
+							stateBuilder.addIpaddress(InetAddresses.toAddrString(allMyIps[i]));
+						}
 					}
 				}
 			} catch (UnknownHostException e) {
