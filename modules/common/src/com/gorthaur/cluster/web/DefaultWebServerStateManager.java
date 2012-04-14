@@ -35,7 +35,6 @@ public class DefaultWebServerStateManager implements WebServerStateManager {
 	
 	@Override
 	public void processUpdate(WebServerState data) throws Exception {
-		System.out.println("Revc update");
 		ApplicationCluster application = cache.get(data.getWebappChecksum());
 		application.update(data);
 	}
@@ -58,7 +57,7 @@ public class DefaultWebServerStateManager implements WebServerStateManager {
 						completeList.removeAll(arg0.getValue());
 					}
 				})
-			    .expireAfterWrite(10, TimeUnit.SECONDS)
+			    .expireAfterWrite(30, TimeUnit.SECONDS)
 			    .build(); 
 		
 		private Cache<String, String> blackListedPorts = CacheBuilder.newBuilder()
@@ -79,7 +78,7 @@ public class DefaultWebServerStateManager implements WebServerStateManager {
 					try {
 						List<SocketAddress> list = accessablePorts.getIfPresent(ipaddress);
 						if(list != null && list.size() > 0) {
-							//Do Nothing
+							accessablePorts.put(ipaddress, list);
 						} else if(addr.isReachable(5000)) {
 							System.out.println("Is reachable: " + ipaddress);
 							list = new ArrayList<SocketAddress>();

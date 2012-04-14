@@ -40,9 +40,9 @@ public class ListNodeInfoHandler implements ActionHandler<ListNodeInfo, ClusterN
 				
 				info.setCpuUtilization(c.getCpuUtilization());
 				
-				System.out.println("Free: " + c.getMemoryFreeBytes());
-				System.out.println("Total: " + c.getMemoryTotalBytes());
-				
+//				System.out.println("Free: " + c.getMemoryFreeBytes());
+//				System.out.println("Total: " + c.getMemoryTotalBytes());
+//				
 				for(ActiveApplications a: c.getApplicationsList()) {
 					name.add(a.getName());
 					applicationId.add(a.getApplicationId());
