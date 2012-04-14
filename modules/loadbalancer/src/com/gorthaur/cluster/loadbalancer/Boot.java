@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import javax.inject.Inject;
 
 import org.jboss.netty.bootstrap.ServerBootstrap;
+import org.jboss.netty.channel.ChannelPipelineFactory;
 
 import com.google.inject.Guice;
 
@@ -14,7 +15,7 @@ public class Boot {
 	ServerBootstrap bootstrap;
 	
 	@Inject
-	ProxyPipelineFactory pipelineFactory;
+	ChannelPipelineFactory pipelineFactory;
 	
 	private int port = 8443;
 	
@@ -33,7 +34,7 @@ public class Boot {
 	}
 
 	public static void main(String[] args) {
-		 Guice.createInjector(new ApplicationModule()).getInstance(Boot.class).run();	 
+		 Guice.createInjector(new SecureApplicationModule()).getInstance(Boot.class).run();	 
 	}
 
 	public void stop() {
