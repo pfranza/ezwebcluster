@@ -35,6 +35,14 @@ public class ListNodeInfoHandler implements ActionHandler<ListNodeInfo, ClusterN
 				ArrayList<String>  applicationId = new ArrayList<String>();
 				ArrayList<String>  status = new ArrayList<String>();
 				
+				info.setMemoryFreePercent(
+						((double)c.getMemoryFreeBytes() / (double)c.getMemoryTotalBytes()) * 100.0);
+				
+				info.setCpuUtilization(c.getCpuUtilization());
+				
+				System.out.println("Free: " + c.getMemoryFreeBytes());
+				System.out.println("Total: " + c.getMemoryTotalBytes());
+				
 				for(ActiveApplications a: c.getApplicationsList()) {
 					name.add(a.getName());
 					applicationId.add(a.getApplicationId());

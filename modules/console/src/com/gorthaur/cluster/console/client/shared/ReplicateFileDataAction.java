@@ -6,10 +6,13 @@ import net.customware.gwt.dispatch.shared.general.StringResult;
 public class ReplicateFileDataAction implements Action<StringResult> {
 
 	private String data;
+	private String name;
 
 	ReplicateFileDataAction(){}
-	public ReplicateFileDataAction(String data) {
+	
+	public ReplicateFileDataAction(String name, String data) {
 		super();
+		this.name = name;
 		this.data = data;
 	}
 	
@@ -17,6 +20,9 @@ public class ReplicateFileDataAction implements Action<StringResult> {
 		return data;
 	}
 	
+	public String getName() {
+		return name;
+	}
 	
 	
 }

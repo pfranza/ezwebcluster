@@ -58,7 +58,7 @@ public class ClusterStateManager {
 	};
 	
 	{
-		t.scheduleAtFixedRate(task, 10000, 5000);
+		t.scheduleAtFixedRate(task, 500, 5000);
 	}
 
 	public void processNewState(ClusterNode node, Address address) {
@@ -78,13 +78,20 @@ public class ClusterStateManager {
 
 	public void forceStatusSend() {
 		try {
+			
+			if(channel == null || channel.getName() == null) {
+				return;
+			}
+			
 			Builder builder = ClusterNode.newBuilder()
 					.setName(channel.getName())
 					.setCpuFrequency(monitor.cpuFrequencyInHz())
-					.setCpuUtilization(prevTimes != null ? monitor.cpuTimes().getCpuUsage(prevTimes) : 0 )
+					.setCpuUtilization(prevTimes != null ? (monitor.cpuTimes().getCpuUsage(prevTimes) * 100.0f) : 0 )
 					.setMemoryFreeBytes(monitor.physical().getFreeBytes())
 					.setMemoryTotalBytes(monitor.physical().getTotalBytes());
 
+			prevTimes = monitor.cpuTimes();
+			
 			applicationManager.populateStatus(builder);
 			dataFileManager.populateStatus(builder);
 

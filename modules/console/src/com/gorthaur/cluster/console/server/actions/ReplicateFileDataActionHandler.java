@@ -25,10 +25,7 @@ public class ReplicateFileDataActionHandler implements ActionHandler<ReplicateFi
 	public StringResult execute(ReplicateFileDataAction arg0,
 			ExecutionContext arg1) throws DispatchException {
 		try {
-			
-//			System.out.println("R: " + arg0.getData().length());
-//			System.out.println(arg0.getData().substring(0, 50));
-			
+				
 			byte[] data = Base64.decode(arg0.getData().split("base64,")[1]);
 			Adler32 c = new Adler32();
 			c.update(data);
@@ -37,7 +34,7 @@ public class ReplicateFileDataActionHandler implements ActionHandler<ReplicateFi
 			ReplicateFile file = ReplicateFile.newBuilder()
 					.setData(ByteString.copyFrom(data))
 					.setChecksum("" + checksum)
-					.setName("testFile.war")
+					.setName(arg0.getName())
 					.build();
 
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
