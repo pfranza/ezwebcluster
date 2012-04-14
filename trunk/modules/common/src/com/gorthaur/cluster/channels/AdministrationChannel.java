@@ -27,6 +27,8 @@ import com.gorthaur.cluster.protocol.Cluster.LaunchApplication.Property;
 import com.gorthaur.cluster.protocol.Cluster.ReplicateFile;
 import com.gorthaur.cluster.protocol.Cluster.ShutdownApplication;
 import com.gorthaur.cluster.protocol.Cluster.TerminateClusterNode;
+import com.gorthaur.cluster.protocol.Cluster.WebServerState;
+import com.gorthaur.cluster.web.WebServerStateManager;
 
 @Singleton
 public class AdministrationChannel {
@@ -62,6 +64,8 @@ public class AdministrationChannel {
 				} else if(header.className.equals(ReplicateFile.class.getName())) {
 					ReplicateFile file = ReplicateFile.parseFrom(msg.getBuffer());
 					dataFileManager.createFile(file);
+				} else if(header.className.equals(WebServerState.class.getName())) {
+					webStateManager.processUpdate(WebServerState.parseFrom(msg.getBuffer()));
 				} else {
 					System.out.println("Unknown class: " + header.className);
 				}
@@ -80,6 +84,7 @@ public class AdministrationChannel {
 	@Inject ClusterStateManager stateManager;
 	@Inject DefaultLocalApplicationManager applicationManager;
 	@Inject DataFileManager dataFileManager;
+	@Inject WebServerStateManager webStateManager;
 	
 	@Inject
 	AdministrationChannel() throws Exception {

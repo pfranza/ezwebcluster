@@ -1,7 +1,12 @@
 package com.gorthaur.cluster.webserver;
 
+import java.io.ByteArrayOutputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.eclipse.jetty.server.AbstractConnector;
 import org.eclipse.jetty.server.Connector;
@@ -9,7 +14,12 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
+import com.google.common.net.InetAddresses;
+import com.google.inject.Inject;
 import com.gorthaur.cluster.applications.Application;
+import com.gorthaur.cluster.channels.AdministrationChannel;
+import com.gorthaur.cluster.protocol.Cluster.WebServerState;
+import com.gorthaur.cluster.protocol.Cluster.WebServerState.Builder;
 import com.gorthaur.cluster.webserver.TestWebServer.HelloHandler;
 
 public class WebServerApplication implements Application {
@@ -18,6 +28,24 @@ public class WebServerApplication implements Application {
 	private ArrayList<Connector> connectors = new ArrayList<Connector>();
 	
 	private int servers = 5;
+	
+	@Inject
+	AdministrationChannel adminChannel;
+	
+	private String applicationChecksum = "0";
+	
+	private Timer timer = new Timer();
+	private TimerTask task = new TimerTask() {
+		
+		@Override
+		public void run() {
+			try {
+				sendStateMessage();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	};
 
 	@Override
 	public void run() {
@@ -32,9 +60,8 @@ public class WebServerApplication implements Application {
 			server.setHandler(new HelloHandler());
 			server.start();
 			
-			for(Connector c: server.getConnectors()) {
-				System.out.println(c.getLocalPort());
-			}
+			sendStateMessage();		
+			timer.scheduleAtFixedRate(task, 1000, 5000);
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -57,15 +84,45 @@ public class WebServerApplication implements Application {
 	@Override
 	public void stop() {
 		try {
+			task.cancel();
 			server.stop();
+			connectors.clear();
+			sendStateMessage();		
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	private void sendStateMessage() throws Exception {
+		Builder stateBuilder = WebServerState.newBuilder();
 
-	public static void main(String[] args) {
-		WebServerApplication m = new WebServerApplication();
-		m.run();
+		if(connectors.size() > 0) {
+			try {
+				InetAddress localhost = InetAddress.getLocalHost();
+				InetAddress[] allMyIps = InetAddress.getAllByName(localhost.getCanonicalHostName());
+				if (allMyIps != null && allMyIps.length > 1) {
+					for (int i = 0; i < allMyIps.length; i++) {
+						stateBuilder.addIpaddress(InetAddresses.toAddrString(allMyIps[i]));
+					}
+				}
+			} catch (UnknownHostException e) {
+				System.out.println(" (error retrieving server host name)");
+			}
+
+			for(Connector c: server.getConnectors()) {
+				stateBuilder.addPort("" + c.getLocalPort());
+			}
+		}
+		
+		stateBuilder.setWebappChecksum(applicationChecksum);
+		
+		WebServerState state = stateBuilder.build();	
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		state.writeTo(out);
+		
+		adminChannel.publishMessage(state.getClass(), out.toByteArray());
 	}
+
+	
 	
 }

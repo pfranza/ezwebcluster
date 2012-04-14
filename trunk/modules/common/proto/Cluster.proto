@@ -52,8 +52,18 @@ message ShutdownApplication {
 	required string applicationId = 1;
 }
 
-message ReplicateFile{
+message ReplicateFile {
 	required string name = 3;
 	required string checksum = 1;
 	required bytes  data = 2;
+}
+
+message WebServerState {
+	repeated string ipaddress = 1;
+	repeated string port = 2;
+	required string webappChecksum = 3;
+}
+
+message LoadBalancerChangeActivateChecksum {
+	required string webappChecksum = 3;
 }
