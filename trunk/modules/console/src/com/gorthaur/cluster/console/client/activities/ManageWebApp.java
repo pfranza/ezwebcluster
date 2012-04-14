@@ -37,21 +37,18 @@ public class ManageWebApp  extends AbstractCompositeActivity {
 		dropHandler.addFileEventHandler(new FileEventHandler() {		
 			@Override
 			public void onFiles(FileEvent event) {
-				for(File f: event.getFiles()) { 
+				for(final File f: event.getFiles()) { 
 //					if(f.getType().equals("image/png")) {
 						new FileBlobReader(f, new AsyncCallback<String>() {
 							
 							@Override
 							public void onSuccess(String result) {
 								System.out.println("Size: " + result.length());
-								dispatcher.execute(new ReplicateFileDataAction(result), 
+								dispatcher.execute(new ReplicateFileDataAction(f.getFileName(), result), 
 										new AsyncCallback<StringResult>() {
 
 									@Override
-									public void onFailure(Throwable caught) {
-										// TODO Auto-generated method stub
-										
-									}
+									public void onFailure(Throwable caught) {}
 
 									@Override
 									public void onSuccess(StringResult result) {
