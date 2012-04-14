@@ -13,6 +13,7 @@ import org.eclipse.jetty.server.AbstractConnector;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.ssl.SslSocketConnector;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
 import com.google.common.net.InetAddresses;
@@ -126,6 +127,10 @@ public class WebServerApplication implements Application {
 		adminChannel.publishMessage(state.getClass(), out.toByteArray());
 	}
 
-	
+	public static void main(String[] args) {
+		Server server = new Server();
+		SslSocketConnector connector = new SslSocketConnector();
+		connector.setPort(8443);
+	}
 	
 }

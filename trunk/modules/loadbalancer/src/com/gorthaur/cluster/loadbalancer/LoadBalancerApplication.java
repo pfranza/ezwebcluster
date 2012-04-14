@@ -14,14 +14,20 @@ public class LoadBalancerApplication implements Application {
 	
 	private Properties properties;
 
-	private Boot b;
+	private Boot secureBalancer;
+	private Boot standardBalancer;
 	
 	@Override
 	public void run() {
-		System.out.println("Launch Load Balancer");
-		b = injector.createChildInjector(new ApplicationModule()).getInstance(Boot.class);
-		b.setPort(Integer.valueOf(properties.getProperty("port", Integer.toString(b.getPort()))));	
-		b.run();
+		System.out.println("Launch Secure Load Balancer");
+		secureBalancer = injector.createChildInjector(new SecureApplicationModule()).getInstance(Boot.class);
+		secureBalancer.setPort(Integer.valueOf(properties.getProperty("port", Integer.toString(secureBalancer.getPort()))));	
+		secureBalancer.run();
+		
+		System.out.println("Launch Standard Load Balancer");
+		standardBalancer = injector.createChildInjector(new StandardApplicationModule()).getInstance(Boot.class);
+		standardBalancer.setPort(8080);	
+		standardBalancer.run();
 	}
 
 	@Override
@@ -31,7 +37,8 @@ public class LoadBalancerApplication implements Application {
 
 	@Override
 	public void stop() {
-		b.stop();
+		secureBalancer.stop();
+		standardBalancer.stop();
 	}
 
 }
