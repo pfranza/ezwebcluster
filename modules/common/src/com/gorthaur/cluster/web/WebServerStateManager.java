@@ -9,4 +9,5 @@ import com.gorthaur.cluster.protocol.Cluster.WebServerState;
 public interface WebServerStateManager {
 	void processUpdate(WebServerState parseFrom) throws Exception;
 	SocketAddress getAccessableEndpointFor(String checksum) throws Exception;
+	String getAccessableEndpointURLFor(String string) throws Exception;
 }
