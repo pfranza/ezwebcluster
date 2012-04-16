@@ -48,6 +48,11 @@ public class DefaultWebServerStateManager implements WebServerStateManager {
 		return cache.get(checksum).getAccessableEndpoint();
 	}
 	
+	@Override
+	public String getAccessableEndpointURLFor(String checksum) throws Exception {
+		return cache.get(checksum).getAccessableEndpointURL();
+	}
+	
 	private static class ApplicationCluster {
 
 		private String checksum;
@@ -70,10 +75,13 @@ public class DefaultWebServerStateManager implements WebServerStateManager {
 			    .build(); 
 		
 		private ArrayList<SocketAddress> completeList = new ArrayList<SocketAddress>();
+		
 
 		public ApplicationCluster(String checksum) {
 			setChecksum(checksum);
 		}
+
+
 
 		public void update(WebServerState data) {
 			for(String ipaddress: data.getIpaddressList()) {
@@ -123,6 +131,17 @@ public class DefaultWebServerStateManager implements WebServerStateManager {
 			return completeList.get(currentIndex);
 		}
 		
+		public String getAccessableEndpointURL() {
+			SocketAddress addr = getAccessableEndpoint();
+			if(addr instanceof InetSocketAddress) {
+				InetSocketAddress iaddr = (InetSocketAddress) addr;
+				return "http://" + iaddr.getHostName() + ":" + iaddr.getPort() + "/";
+			}
+			return "";
+		}
+		
 	}
+
+
 
 }

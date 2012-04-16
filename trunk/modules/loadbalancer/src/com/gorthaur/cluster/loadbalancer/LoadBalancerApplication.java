@@ -3,9 +3,11 @@ package com.gorthaur.cluster.loadbalancer;
 import java.util.Properties;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import com.google.inject.Injector;
 import com.gorthaur.cluster.applications.Application;
+import com.gorthaur.cluster.loadbalancer.test.JettyBalancer;
 
 public class LoadBalancerApplication implements Application {
 
@@ -16,6 +18,8 @@ public class LoadBalancerApplication implements Application {
 
 	private Boot secureBalancer;
 	private Boot standardBalancer;
+	
+	@Inject Provider<JettyBalancer> balancer;
 	
 	@Override
 	public void run() {
@@ -28,6 +32,8 @@ public class LoadBalancerApplication implements Application {
 		standardBalancer = injector.createChildInjector(new StandardApplicationModule()).getInstance(Boot.class);
 		standardBalancer.setPort(8080);	
 		standardBalancer.run();
+		
+//		balancer.get();
 	}
 
 	@Override
